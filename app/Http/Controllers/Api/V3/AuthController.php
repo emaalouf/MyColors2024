@@ -50,7 +50,9 @@ class AuthController extends Controller
             if ($this->encryptor->validateHash($password, $storedHash)) {
                 $plainTextToken = Str::random(40);
 
-                // Update device token and language if provided
+                $customer->rp_token = $plainTextToken;
+
+
                 if ($deviceToken || $deviceLanguage) {
                     if ($customer->device_token !== $deviceToken || $customer->device_language !== $deviceLanguage) {
                         if ($deviceToken) {
@@ -59,11 +61,13 @@ class AuthController extends Controller
                         if ($deviceLanguage) {
                             $customer->device_language = $deviceLanguage;
                         }
-                        $customer->save();
                     }
                 }
 
-                // Retrieve customer addresses and custom attributes
+
+                $customer->save();
+
+
                 $addresses = $customer->getCustomerAddresses()->get();
                 $customAttributes = $this->getCustomAttributes($customer); // Assuming a method to get custom attributes
                 $extensionAttributes = $this->getExtensionAttributes($customer); // Assuming a method to get extension attributes

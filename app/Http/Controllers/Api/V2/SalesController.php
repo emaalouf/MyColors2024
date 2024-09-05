@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer\Entity;
 use Illuminate\Http\Request;
 use App\Models\Sales;
 
@@ -13,56 +14,45 @@ class SalesController extends Controller
      */
     public function index(Request $request)
     {
-        // Retrieve the Bearer token from the Authorization header
         $authorizationHeader = $request->header('Authorization');
 
         if ($authorizationHeader && preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
-            $token = $matches[1]; // Extract the token from the header
+            $token = $matches[1];
         } else {
             return response()->json(['message' => 'Token is required'], 400);
         }
 
-        // Validate that the token is present
         if (!$token) {
             return response()->json(['error' => 'Token is required'], 400);
         }
 
-        // Find the order using the token
-        $order = Sales\Order::where('customer_id', $token)->first();
+        $customer = Entity::where('rp_token', $token)->first();
 
-        // If the order is not found or the customer_id is missing, return an error
-        if (!$order || !$order->customer_id) {
+        if (!$customer) {
             return response()->json(['error' => 'Invalid token or customer not found'], 404);
         }
 
-        // Get the customer_id from the order
-        $customerId = $order->customer_id;
+        $customerId = $customer->entity_id;
 
-        // Create a base query for fetching orders by customer ID
         $query = Sales\Order::where('customer_id', $customerId);
 
-        // Apply additional filters if provided in the request
         if ($request->has('filters')) {
             foreach ($request->filters as $filter) {
                 $query->where($filter['field'], $filter['condition'], $filter['value']);
             }
         }
 
-        // Apply additional filters if provided in the request
         if ($request->has('searchCriteria')) {
             $searchCriteria = $request->input('searchCriteria');
             $pageSize = $searchCriteria['pageSize'] ?? 20;
             $currentPage = $searchCriteria['currentPage'] ?? 1;
 
-            // Set pagination parameters
             $orders = $query->paginate($pageSize, ['*'], 'page', $currentPage);
         } else {
-            // Default pagination if no searchCriteria is provided
             $orders = $query->paginate(20);
         }
 
 
-        // Format the response
         $response = [
             'count' => count($orders->items()),
             'total_count' => $orders->total(),

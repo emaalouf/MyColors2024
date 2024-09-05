@@ -15,18 +15,17 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        // Retrieve the Bearer token from the Authorization header
         $authorizationHeader = $request->header('Authorization');
 
         if ($authorizationHeader && preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
-            $token = $matches[1]; // Extract the token from the header
+            $token = $matches[1];
         } else {
             return response()->json(['message' => 'Token is required'], 400);
         }
 
-        // Find the customer by the token (in this case, assuming token = entity_id)
-        $customer = Customer\Entity::with('getCustomerAddresses') // eager load addresses
-        ->where('entity_id', intval($token))
+
+        $customer = Customer\Entity::with('getCustomerAddresses')
+        ->where('rp_token', intval($token))
             ->first();
 
         if ($customer) {
@@ -73,7 +72,7 @@ class CustomerController extends Controller
 
             return response()->json($response, 200);
         } else {
-            return response()->json(['message' => 'Customer not found'], 404);
+            return response()->json(['message' => 'Invalid token or customer not found'], 404);
         }
     }
 
