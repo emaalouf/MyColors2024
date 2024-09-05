@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "ext-sodium": "*",
         "combindma/laravel-facebook-pixel": "^4.1",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^3.6",

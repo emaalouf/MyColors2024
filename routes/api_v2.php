@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\V3\TestController;
 use App\Http\Controllers\CatalogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,13 +19,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// cata;pg route
-Route::get('testing', [TestController::class, 'getTest'])->name('getTest');
-
 Route::group(['prefix' => 'catalog'], function () {
     Route::get('categories', [CatalogController::class, 'getCategoryTree'])->name('getCategoryTree');
 });
 // customer route
+Route::apiResource('orders/mine',\App\Http\Controllers\Api\V2\SalesController::class);
 //Route::group(['prefix' => 'customer'], function () {
 //    Route::get('ten',[CustomerController::class,'get10Customers'])->name('get10Customers');
 //});
