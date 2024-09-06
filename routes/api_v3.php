@@ -25,7 +25,7 @@ Route::group(['prefix' => 'catalog'], function () {
     Route::get('categories', [CatalogController::class, 'getCategoryTree'])->name('getCategoryTree');
 });
 // customer route
-Route::apiResource('customers/me',\App\Http\Controllers\Api\V3\CustomerController::class);
+Route::get('customers/me',[\App\Http\Controllers\Api\V3\CustomerController::class, 'getCustomerAddresses']);
 Route::post('customer/login',[\App\Http\Controllers\Api\V3\AuthController::class, 'loginCustomer']);
 //Route::group(['prefix' => 'customer'], function () {
 //    Route::get('ten',[CustomerController::class,'get10Customers'])->name('get10Customers');

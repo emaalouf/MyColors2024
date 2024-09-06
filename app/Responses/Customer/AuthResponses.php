@@ -8,7 +8,6 @@ class AuthResponses
 {
     public static function loginCustomerResponse(Entity $customer, $plainTextToken)
     {
-        $addresses = $customer->getCustomerAddresses()->get();
         $customAttributes = self::getCustomAttributes($customer);
         $extensionAttributes = self::getExtensionAttributes($customer);
 
@@ -29,25 +28,7 @@ class AuthResponses
                 'gender' => $customer->gender ?? null,
                 'store_id' => $customer->store_id ?? null,
                 'website_id' => $customer->website_id ?? null,
-                'addresses' => $addresses->map(function ($address) {
-                    return [
-                        'id' => $address->entity_id,
-                        'customer_id' => $address->parent_id,
-                        'region' => [
-                            'region_code' => $address->region_code ?? null,
-                            'region' => $address->region ?? null,
-                            'region_id' => $address->region_id ?? null,
-                        ],
-                        'region_id' => $address->region_id ?? null,
-                        'country_id' => $address->country_id,
-                        'street' => $address->street,
-                        'telephone' => $address->telephone,
-                        'city' => $address->city,
-                        'firstname' => $address->firstname,
-                        'lastname' => $address->lastname,
-                        'custom_attributes' => self::getAddressCustomAttributes($address),
-                    ];
-                }),
+                'addresses' => AddressResource::collection($customer->getCustomerAddresses),
                 'disable_auto_group_change' => $customer->disable_auto_group_change ?? null,
                 'extension_attributes' => $extensionAttributes,
                 'custom_attributes' => $customAttributes,

@@ -1,5 +1,17 @@
 <?php
+
 namespace App\Services\Customer\Api;
-interface CustomerServiceInterface {
-    public function get10Customers();
+
+use App\Models\Customer\Entity;
+
+interface CustomerServiceInterface
+{
+    /**
+     * Retrieve customer addresses based on the provided token.
+     *
+     * @param string $token
+     * @return Entity
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    public function getCustomerAddresses(string $token): Entity;
 }

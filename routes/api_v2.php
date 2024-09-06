@@ -23,7 +23,7 @@ Route::group(['prefix' => 'catalog'], function () {
     Route::get('categories', [CatalogController::class, 'getCategoryTree'])->name('getCategoryTree');
 });
 // customer route
-Route::apiResource('orders/mine',\App\Http\Controllers\Api\V2\SalesController::class);
+Route::get('orders/mine',[\App\Http\Controllers\Api\V2\SalesController::class, 'getCustomerOrderList']);
 //Route::group(['prefix' => 'customer'], function () {
 //    Route::get('ten',[CustomerController::class,'get10Customers'])->name('get10Customers');
 //});

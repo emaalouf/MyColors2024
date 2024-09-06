@@ -4,7 +4,7 @@ namespace App\Responses\Sales;
 
 class SalesResponses
 {
-    public static function formatOrdersResponse($orders)
+    public static function OrdersResponse($orders)
     {
         return [
             'count' => count($orders->items()),
