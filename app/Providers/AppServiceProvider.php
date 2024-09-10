@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Balance\Api\CustomerBalanceInterface;
+use App\Services\Balance\Model\CustomerBalanceService;
 use App\Services\Catalog\Api\CatalogServiceInterface;
 use App\Services\Catalog\Model\CatalogService;
 use App\Services\Content\Api\ContentServiceInterface;
@@ -27,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ContentServiceInterface::class,ContentService::class);
 
         $this->app->bind(CustomerServiceInterface::class,CustomerService::class);
+
+        $this->app->bind(CustomerBalanceInterface::class,CustomerBalanceService::class);
 
         $this->app->bind(AuthServicesInterface::class,AuthService::class);
 

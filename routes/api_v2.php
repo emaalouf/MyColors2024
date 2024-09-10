@@ -24,6 +24,8 @@ Route::group(['prefix' => 'catalog'], function () {
 });
 // customer route
 Route::get('orders/mine',[\App\Http\Controllers\Api\V2\SalesController::class, 'getCustomerOrderList']);
+Route::get('wishlist',[\App\Http\Controllers\Api\V2\WishlistController::class, 'getWishlist']);
+Route::middleware('auth:sanctum')->get('customer/balance', [\App\Http\Controllers\Api\V2\BalanceController::class, 'getCustomerBalance']);
 //Route::group(['prefix' => 'customer'], function () {
 //    Route::get('ten',[CustomerController::class,'get10Customers'])->name('get10Customers');
 //});
