@@ -2,11 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-use App\Http\Controllers\Api\V2\BalanceController;
-use App\Http\Controllers\Api\V2\SalesController;
-use App\Http\Controllers\Api\V2\WishlistController;
-use App\Http\Controllers\Api\V3\AuthController;
-use App\Http\Controllers\Api\V3\CustomerController;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,20 +18,25 @@ use App\Http\Controllers\Api\V3\CustomerController;
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-// magento apis
+
+// Magento APIs
 $router->group(['prefix' => 'rest'], function () use ($router) {
+    
     // V2 Routes
     $router->group(['prefix' => 'V2'], function () use ($router) {
-        $router->get('/orders/mine', [SalesController::class, 'getCustomerOrderList']);
-        $router->get('wishlist', [WishlistController::class, 'getWishlist']);
-        // protected authenticated routes under V2
-        // $router->group(['middleware' => 'auth:sanctum'], function () use ($router) {
-        //     $router->get('customer/balance', [BalanceController::class, 'getCustomerBalance']);
-        // });
+        $router->get('/orders/mine', 'Api\V2\SalesController@getCustomerOrderList');
+        $router->get('wishlist', 'Api\V2\WishlistController@getWishlist');
+        $router->get('categories', 'CatalogController@getCategoryTree');
+
+        // Protected authenticated routes under V2
+        $router->group(['middleware' => 'auth:sanctum'], function () use ($router) {
+            $router->get('customer/balance', 'Api\V2\BalanceController@getCustomerBalance');
+        });
     });
-    // V3 routes
+
+    // V3 Routes
     $router->group(['prefix' => 'V3'], function () use ($router) {
-        $router->get('customers/me', [CustomerController::class, 'getCustomerAddresses']);
-        $router->post('customer/login', [AuthController::class, 'loginCustomer']);
+        $router->get('customers/me', 'Api\V3\CustomerController@getCustomerAddresses');
+        $router->post('customer/login', 'Api\V3\AuthController@loginCustomer');
     });
 });
