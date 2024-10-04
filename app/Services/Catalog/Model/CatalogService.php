@@ -9,7 +9,7 @@ class CatalogService implements CatalogServiceInterface
 {
     public function getCategoryTree()
     {
-        $categories = Entity::where('level', 2)->with('children')->get();
+        $categories = Entity::where('parent_id',1)->with('children')->get();
 
         return response()->json([
             "tree" => $categories
